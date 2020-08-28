@@ -222,8 +222,9 @@ export class Text extends Sprite
         for (let i = 0; i < passesCount; ++i)
         {
             const isShadowPass = style.dropShadow && i === 0;
-            const dsOffsetText = isShadowPass ? height * 2 : 0; // we only want the drop shadow, so put text way off-screen
-            const dsOffsetShadow = dsOffsetText * this.resolution;
+            // we only want the drop shadow, so put text way off-screen
+            const dsOffsetText = isShadowPass ? Math.ceil(Math.max(1, height) + (style.padding * 2)) : 0;
+            const dsOffsetShadow = dsOffsetText * this._resolution;
 
             if (isShadowPass)
             {
@@ -393,6 +394,9 @@ export class Text extends Sprite
         this._onTextureUpdate();
 
         baseTexture.setRealSize(canvas.width, canvas.height, this._resolution);
+
+        // Recursively updates transform of all objects from the root to this one
+        this._recursivePostUpdateTransform();
 
         this.dirty = false;
     }

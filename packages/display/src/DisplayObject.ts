@@ -228,20 +228,6 @@ export abstract class DisplayObject extends EventEmitter
         this._mask = null;
 
         /**
-         * Fired when this DisplayObject is added to a Container.
-         *
-         * @event PIXI.DisplayObject#added
-         * @param {PIXI.Container} container - The container added to.
-         */
-
-        /**
-         * Fired when this DisplayObject is removed from a Container.
-         *
-         * @event PIXI.DisplayObject#removed
-         * @param {PIXI.Container} container - The container removed from.
-         */
-
-        /**
          * If the object has been destroyed via destroy(). If true, it should not be used.
          *
          * @member {boolean}
@@ -263,6 +249,22 @@ export abstract class DisplayObject extends EventEmitter
     }
 
     /**
+     * Fired when this DisplayObject is added to a Container.
+     *
+     * @instance
+     * @event added
+     * @param {PIXI.Container} container - The container added to.
+     */
+
+    /**
+     * Fired when this DisplayObject is removed from a Container.
+     *
+     * @instance
+     * @event removed
+     * @param {PIXI.Container} container - The container removed from.
+     */
+
+    /**
      * Recalculates the bounds of the display object.
      */
     abstract calculateBounds(): void;
@@ -280,7 +282,7 @@ export abstract class DisplayObject extends EventEmitter
      * Recursively updates transform of all objects from the root to this one
      * internal function for toLocal()
      */
-    private _recursivePostUpdateTransform(): void
+    protected _recursivePostUpdateTransform(): void
     {
         if (this.parent)
         {

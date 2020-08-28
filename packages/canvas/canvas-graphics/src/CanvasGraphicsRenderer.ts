@@ -5,7 +5,7 @@ import type { CanvasRenderer } from '@pixi/canvas-renderer';
 import type { FillStyle, Graphics } from '@pixi/graphics';
 import type { Polygon, Rectangle, Circle, Ellipse, RoundedRectangle } from '@pixi/math';
 
-/**
+/*
  * @author Mat Groves
  *
  * Big thanks to the very clever Matt DesLauriers <mattdesl> https://github.com/mattdesl/
@@ -28,6 +28,7 @@ export class CanvasGraphicsRenderer
 {
     public renderer: CanvasRenderer;
     private _svgMatrix: DOMMatrix|boolean;
+    private _tempMatrix: Matrix;
 
     /**
      * @param {PIXI.CanvasRenderer} renderer - The current PIXI renderer.
@@ -36,6 +37,7 @@ export class CanvasGraphicsRenderer
     {
         this.renderer = renderer;
         this._svgMatrix = null;
+        this._tempMatrix = new Matrix();
     }
 
     /**
@@ -103,6 +105,11 @@ export class CanvasGraphicsRenderer
 
             const fillColor = data.fillStyle.color | 0;
             const lineColor = data.lineStyle.color | 0;
+
+            if (data.matrix)
+            {
+                renderer.setContextTransform(transform.copyTo(this._tempMatrix).append(data.matrix));
+            }
 
             if (fillStyle.visible)
             {
@@ -385,5 +392,7 @@ export class CanvasGraphicsRenderer
     public destroy(): void
     {
         this.renderer = null;
+        this._svgMatrix = null;
+        this._tempMatrix = null;
     }
 }

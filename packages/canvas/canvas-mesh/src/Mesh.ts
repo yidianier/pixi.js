@@ -3,6 +3,24 @@ import { settings } from './settings';
 
 import type { CanvasRenderer } from '@pixi/canvas-renderer';
 
+let warned = false;
+
+/**
+ * Cached tint value so we can tell when the tint is changed.
+ * @memberof PIXI.Mesh#
+ * @member {number} _cachedTint
+ * @protected
+ */
+Mesh.prototype._cachedTint = 0xFFFFFF;
+
+/**
+ * Cached tinted texture.
+ * @memberof PIXI.Mesh#
+ * @member {HTMLCanvasElement} _tintedCanvas
+ * @protected
+ */
+Mesh.prototype._tintedCanvas = null;
+
 /**
  * Renders the object using the Canvas renderer
  *
@@ -19,7 +37,18 @@ Mesh.prototype._renderCanvas = function _renderCanvas(renderer: CanvasRenderer):
         this.calculateUvs();
     }
 
-    this.material._renderCanvas(renderer, this);
+    if (this.material._renderCanvas)
+    {
+        this.material._renderCanvas(renderer, this);
+    }
+    else if (!warned)
+    {
+        warned = true;
+        if (window.console)
+        {
+            console.warn('Mesh with custom shaders are not supported in CanvasRenderer.');
+        }
+    }
 };
 
 // IMPORTANT: Please do NOT use this as a precedent to use `settings` after the object is created
